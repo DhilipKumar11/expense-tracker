@@ -111,7 +111,7 @@ export const createExpense = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { amount, description, category, paymentMethod, date } = req.body as CreateExpenseInput
+    const { amount, description, category, paymentMethod, date, type } = req.body as CreateExpenseInput
 
     // Verify category exists
     const categoryExists = await Category.findById(category)
@@ -130,6 +130,7 @@ export const createExpense = async (
       category,
       paymentMethod: paymentMethod || 'cash',
       date: date ? new Date(date) : new Date(),
+      type: type || 'expense',
     })
 
     // Populate category info

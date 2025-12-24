@@ -32,6 +32,10 @@ export const createExpenseSchema = z.object({
         (date) => !date || !isNaN(Date.parse(date)),
         'Invalid date format'
       ),
+    type: z
+      .enum(['expense', 'income'])
+      .optional()
+      .default('expense'),
   }),
 })
 

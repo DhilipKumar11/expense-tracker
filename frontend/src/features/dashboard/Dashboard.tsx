@@ -244,7 +244,7 @@ export function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Manual Entry */}
           <button
-            onClick={() => setShowCategorySelection(true)}
+            onClick={() => setShowQuickForm(true)}
             className="p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors text-center"
           >
             <div className="text-3xl mb-3">✏️</div>
