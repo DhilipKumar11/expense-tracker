@@ -33,7 +33,16 @@ export const getCategories = async (
 ): Promise<void> => {
   try {
     const type = (req.query.type as string) || 'expense'
-    let categories = await Category.find({ type }).sort({ name: 1 }).lean()
+
+    // Create query
+    const query: any = { type }
+    // If requesting expenses, also include categories with no type (legacy data)
+    if (type === 'expense') {
+      query.$or = [{ type: 'expense' }, { type: { $exists: false } }, { type: null }]
+      delete query.type
+    }
+
+    let categories = await Category.find(query).sort({ name: 1 }).lean()
 
     // Auto-seed if empty
     if (categories.length === 0) {
@@ -42,7 +51,9 @@ export const getCategories = async (
       await Category.insertMany(
         seedData.map(cat => ({ ...cat, isDefault: true }))
       )
-      categories = await Category.find({ type }).sort({ name: 1 }).lean()
+
+      // Re-fetch with same query
+      categories = await Category.find(query).sort({ name: 1 }).lean()
     }
 
     res.json({
