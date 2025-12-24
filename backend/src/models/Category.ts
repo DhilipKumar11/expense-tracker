@@ -5,6 +5,7 @@ export interface ICategory extends Document {
   name: string
   color: string
   icon: string
+  type: 'expense' | 'income'
   isDefault: boolean
   createdAt: Date
   updatedAt: Date
@@ -32,6 +33,12 @@ const CategorySchema = new Schema<ICategory>(
       type: String,
       required: [true, 'Icon is required'],
       default: 'ShoppingBag',
+    },
+    type: {
+      type: String,
+      enum: ['expense', 'income'],
+      default: 'expense',
+      required: [true, 'Type is required'],
     },
     isDefault: {
       type: Boolean,

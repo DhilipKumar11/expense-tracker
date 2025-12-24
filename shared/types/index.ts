@@ -16,6 +16,7 @@ export interface Expense {
   description: string
   category: ExpenseCategory
   paymentMethod: 'cash' | 'card' | 'upi' | 'gpay' | 'phonepe' | 'bank_transfer' | 'other'
+  type: 'expense' | 'income'
   date: Date
   createdAt: Date
   updatedAt: Date
@@ -26,6 +27,16 @@ export interface ExpenseCategory {
   name: string
   color: string
   icon: string
+  type: 'expense' | 'income'
+}
+
+export interface Note {
+  _id: string
+  user: string
+  content: string
+  date: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface DashboardStats {
@@ -62,6 +73,7 @@ export interface CreateExpenseRequest {
   description: string
   category: string
   paymentMethod: 'cash' | 'card' | 'upi' | 'gpay' | 'phonepe' | 'bank_transfer' | 'other'
+  type: 'expense' | 'income'
   date: Date
 }
 

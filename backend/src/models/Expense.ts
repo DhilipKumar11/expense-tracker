@@ -7,6 +7,7 @@ export interface IExpense extends Document {
   description: string
   category: Schema.Types.ObjectId
   paymentMethod: 'cash' | 'card' | 'upi' | 'gpay' | 'phonepe' | 'bank_transfer' | 'other'
+  type: 'expense' | 'income'
   date: Date
   createdAt: Date
   updatedAt: Date
@@ -47,6 +48,12 @@ const ExpenseSchema = new Schema<IExpense>(
       enum: ['cash', 'card', 'upi', 'gpay', 'phonepe', 'bank_transfer', 'other'],
       default: 'cash',
       required: [true, 'Payment method is required'],
+    },
+    type: {
+      type: String,
+      enum: ['expense', 'income'],
+      default: 'expense',
+      required: [true, 'Type is required'],
     },
   },
   {

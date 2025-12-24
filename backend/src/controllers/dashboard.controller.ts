@@ -24,16 +24,20 @@ export const getStats = async (
       .sort({ date: -1 })
       .lean()
 
-    // Calculate total expenses
-    const totalExpenses = allExpenses.reduce((sum, expense) => sum + expense.amount, 0)
+    // Separate expenses and income
+    const expenses = allExpenses.filter((item: any) => item.type === 'expense' || !item.type)
+    const income = allExpenses.filter((item: any) => item.type === 'income')
 
-    // For demo purposes, let's assume some income (you can modify this based on your requirements)
-    const totalIncome = 50000 // This could come from a separate income model
+    // Calculate total expenses
+    const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0)
+
+    // Calculate total income
+    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0)
 
     const balance = totalIncome - totalExpenses
 
     // Get current month expenses
-    const currentMonthExpenses = allExpenses.filter(expense => {
+    const currentMonthExpenses = expenses.filter(expense => {
       const expenseDate = new Date(expense.date)
       return expenseDate >= startOfCurrentMonth && expenseDate <= endOfCurrentMonth
     })
@@ -42,7 +46,7 @@ export const getStats = async (
 
     // Calculate category breakdown
     const categoryMap = new Map()
-    allExpenses.forEach(expense => {
+    expenses.forEach(expense => {
       const categoryId = (expense.category as any)._id.toString()
       const categoryName = (expense.category as any).name
       if (categoryMap.has(categoryId)) {
@@ -65,7 +69,9 @@ export const getStats = async (
     }))
 
     // Get recent expenses (last 5)
-    const recentExpenses = allExpenses.slice(0, 5)
+    // Filter out income from recent transactions list if desired, or keep them. 
+    // Usually dashboard shows recent *expenses*. Let's show expenses only for now.
+    const recentExpenses = expenses.slice(0, 5)
 
     res.json({
       success: true,

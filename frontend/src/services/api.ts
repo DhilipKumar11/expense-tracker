@@ -135,8 +135,22 @@ export const expensesApi = {
 
 // Categories API
 export const categoriesApi = {
-  getCategories: (): Promise<ApiResponse<any[]>> =>
-    apiRequest('/categories'),
+  getCategories: (type: 'expense' | 'income' = 'expense'): Promise<ApiResponse<any[]>> =>
+    apiRequest(`/categories?type=${type}`),
+}
+
+export const notesApi = {
+  getNotes: (): Promise<ApiResponse<any[]>> =>
+    apiRequest('/notes'),
+
+  createNote: (content: string): Promise<ApiResponse<any>> =>
+    apiRequest('/notes', {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    }),
+
+  deleteNote: (id: string): Promise<ApiResponse<void>> =>
+    apiRequest(`/notes/${id}`, { method: 'DELETE' }),
 }
 
 export { ApiError }

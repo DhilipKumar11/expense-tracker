@@ -12,8 +12,16 @@ const defaultCategories = [
   { name: 'Healthcare', color: '#F7DC6F', icon: 'Heart' },
   { name: 'Education', color: '#BB8FCE', icon: 'GraduationCap' },
   { name: 'Travel', color: '#85C1E9', icon: 'Plane' },
-  { name: 'Personal Care', color: '#F8C471', icon: 'Sparkles' },
-  { name: 'Other', color: '#D5DBDB', icon: 'MoreHorizontal' },
+  { name: 'Personal Care', color: '#F8C471', icon: 'Sparkles', type: 'expense' },
+  { name: 'Other', color: '#D5DBDB', icon: 'MoreHorizontal', type: 'expense' },
+]
+
+const defaultIncomeCategories = [
+  { name: 'Salary', color: '#2ECC71', icon: 'Briefcase', type: 'income' },
+  { name: 'Freelance', color: '#3498DB', icon: 'Monitor', type: 'income' },
+  { name: 'Investments', color: '#9B59B6', icon: 'TrendingUp', type: 'income' },
+  { name: 'Rental', color: '#E67E22', icon: 'Home', type: 'income' },
+  { name: 'Other', color: '#95A5A6', icon: 'PlusCircle', type: 'income' },
 ]
 
 // @desc    Get all categories
@@ -24,15 +32,17 @@ export const getCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    let categories = await Category.find({}).sort({ name: 1 }).lean()
+    const type = (req.query.type as string) || 'expense'
+    let categories = await Category.find({ type }).sort({ name: 1 }).lean()
 
     // Auto-seed if empty
     if (categories.length === 0) {
-      console.log('No categories found. Seeding default categories...')
+      console.log(`No ${type} categories found. Seeding...`)
+      const seedData = type === 'income' ? defaultIncomeCategories : defaultCategories
       await Category.insertMany(
-        defaultCategories.map(cat => ({ ...cat, isDefault: true }))
+        seedData.map(cat => ({ ...cat, isDefault: true }))
       )
-      categories = await Category.find({}).sort({ name: 1 }).lean()
+      categories = await Category.find({ type }).sort({ name: 1 }).lean()
     }
 
     res.json({
