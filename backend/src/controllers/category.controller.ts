@@ -2,6 +2,20 @@ import { Response } from 'express'
 import { Category } from '../models/Category'
 import { AuthRequest } from '../middleware/auth'
 
+// Default categories to seed the database
+const defaultCategories = [
+  { name: 'Food & Dining', color: '#FF6B6B', icon: 'UtensilsCrossed' },
+  { name: 'Transportation', color: '#4ECDC4', icon: 'Car' },
+  { name: 'Shopping', color: '#45B7D1', icon: 'ShoppingBag' },
+  { name: 'Entertainment', color: '#FFA07A', icon: 'Film' },
+  { name: 'Bills & Utilities', color: '#98D8C8', icon: 'Receipt' },
+  { name: 'Healthcare', color: '#F7DC6F', icon: 'Heart' },
+  { name: 'Education', color: '#BB8FCE', icon: 'GraduationCap' },
+  { name: 'Travel', color: '#85C1E9', icon: 'Plane' },
+  { name: 'Personal Care', color: '#F8C471', icon: 'Sparkles' },
+  { name: 'Other', color: '#D5DBDB', icon: 'MoreHorizontal' },
+]
+
 // @desc    Get all categories
 // @route   GET /api/categories
 // @access  Public (for now, could be private)
@@ -10,7 +24,16 @@ export const getCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find({}).sort({ name: 1 }).lean()
+    let categories = await Category.find({}).sort({ name: 1 }).lean()
+
+    // Auto-seed if empty
+    if (categories.length === 0) {
+      console.log('No categories found. Seeding default categories...')
+      await Category.insertMany(
+        defaultCategories.map(cat => ({ ...cat, isDefault: true }))
+      )
+      categories = await Category.find({}).sort({ name: 1 }).lean()
+    }
 
     res.json({
       success: true,
@@ -56,19 +79,7 @@ export const getCategory = async (
   }
 }
 
-// Default categories to seed the database
-const defaultCategories = [
-  { name: 'Food & Dining', color: '#FF6B6B', icon: 'UtensilsCrossed' },
-  { name: 'Transportation', color: '#4ECDC4', icon: 'Car' },
-  { name: 'Shopping', color: '#45B7D1', icon: 'ShoppingBag' },
-  { name: 'Entertainment', color: '#FFA07A', icon: 'Film' },
-  { name: 'Bills & Utilities', color: '#98D8C8', icon: 'Receipt' },
-  { name: 'Healthcare', color: '#F7DC6F', icon: 'Heart' },
-  { name: 'Education', color: '#BB8FCE', icon: 'GraduationCap' },
-  { name: 'Travel', color: '#85C1E9', icon: 'Plane' },
-  { name: 'Personal Care', color: '#F8C471', icon: 'Sparkles' },
-  { name: 'Other', color: '#D5DBDB', icon: 'MoreHorizontal' },
-]
+
 
 // @desc    Seed default categories
 // @route   POST /api/categories/seed
