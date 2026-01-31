@@ -12,7 +12,7 @@ export const connectDB = async (): Promise<void> => {
 
     const conn = await mongoose.connect(mongoURI)
 
-    isConnected = !!conn.connections[0].readyState
+    isConnected = !!conn.connection.readyState
     console.log(`MongoDB Connected: ${conn.connection.host}`)
 
     // Handle connection events
