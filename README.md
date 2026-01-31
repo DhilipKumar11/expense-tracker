@@ -1,6 +1,8 @@
-# Expense Tracker - Full-Stack Application
+# Expense Tracker - Full-Stack CRUD Application
 
-A modern, scalable expense tracking application built with React, TypeScript, Express.js, and MongoDB. Features a beautiful UI with dark mode support, comprehensive API, and production-ready deployment configurations.
+🚀 **Live Demo**: [https://expense-tracker-vercel-lilac.vercel.app/auth](https://expense-tracker-vercel-lilac.vercel.app/auth)
+
+A modern, full-stack **CRUD (Create, Read, Update, Delete)** expense tracking application built with React, TypeScript, Express.js, and MongoDB. This application demonstrates complete CRUD operations for managing expenses, income, and user data with a beautiful UI, dark mode support, comprehensive RESTful API, and production-ready deployment configurations.
 
 ## 🏗️ Architecture Overview
 
